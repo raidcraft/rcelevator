@@ -5,18 +5,30 @@ Spieler können - wie im echten Leben - das Zielstockwerk des Aufzugs wählen un
 ## Schild
 Aufzüge werden über Schilder erstellt und gesteuert.
 
+### Bedienung
+
+Spieler können über das Klicken auf das Aufzug-Schild das Ziel-Stockwerk wählen. Ein Linksklick erhöht das ausgewählte Stockwerk (nach oben), ein Rechtsklick verringert das ausgewählte Stockwerk (nach unten).
+Mit einem Redstone-Trigger (z.B. Button oder Schalter) kann der Aufzug in Gang gesetzt werden.
+
 ### Formatierung
 
 *Zeile 1:* ``Etage <Aktuelle Etage>``
+
 In dieser Zeile wird angegeben in welcher Etage des Aufzugs dieses Schild steht.
 Möglich sind Angaben von Untergeschossen (beginnend mit ``U``), das Erdgeschoss (``EG``) oder Obergeschosse (beginnend mit ``O``).
 
 *Zeile 2:* ``[Aufzug]``
+
 Diese Zeile markiert das Schild als Aufzug-Schild.
 
 *Zeile 3:* ``<Unterstes Geschoss> - [Radius -] <Oberstes Geschoss>``
+
 In dieser Zeile wird festgelegt zwischen welchen Stockwerken der Aufzug fährt. Beginnend mit dem niedrigsten und anschließend den obersten Stockwerk.
 Optional kann zwischen den Angaben noch die Aufzug-Kabinen-Größe eingestellt werden. Diese wird als Volumen in Blöcken angegeben. D.h. eine Angabe von 2 bedeutet alle Spieler im Radius von 2x2x2 blöcken werden beim aktivieren des Aufzugs in das gewählte Stockerk teleportiert.
+
+*Zeile 3:* ``Auktuelle Zielauswahl``
+
+Diese Zeile wird automatisch bei Auswahl des Ziel-Stockwerks geändert und muss bei der Erstellung nicht angegeben werden (kann leer sein).
 
 #### Beispiel 1 
 Dieses Schild wird für das Erdgeschoss erstellt (1. Zeile).
