@@ -5,8 +5,6 @@ import de.raidcraft.rcelevator.RCElevator;
 import de.raidcraft.rcelevator.utils.SignUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,11 +20,12 @@ import java.util.Stack;
  */
 public class ElevatorListener implements Listener {
 
-    private Stack<Location> lockedTriggerLocations = new Stack<>();
+    private final Stack<Location> lockedTriggerLocations = new Stack<>();
 
     @EventHandler(ignoreCancelled = true)
     public void onSignChange(SignChangeEvent event) {
-        if(!SignUtils.isLineEqual(event.getLine(1), RCElevator.SIGN_TAG)){
+
+        if(!ElevatorSign.isElevatorSignTag(event.getLine(1))){
             return;
         }
 
@@ -50,13 +49,16 @@ public class ElevatorListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if(event.getClickedBlock() == null || !(event.getClickedBlock().getState() instanceof Sign)) {
+        if(event.getClickedBlock() == null) {
             return;
         }
 
-        Sign sign = (Sign)event.getClickedBlock().getState();
+        Sign sign = SignUtils.getSignByBlock(event.getClickedBlock());
+        if(sign == null) {
+            return;
+        }
 
-        if(!SignUtils.isLineEqual(sign.getLine(1), RCElevator.SIGN_TAG)) {
+        if(!ElevatorSign.isElevatorSign(sign)) {
             return;
         }
 
@@ -79,7 +81,7 @@ public class ElevatorListener implements Listener {
     public void onBlockPowered(BlockRedstoneEvent event) {
         int current = event.getNewCurrent();
 
-        Sign sign = null;
+        Sign sign;
 
         // check if trigger is already processed
         if(lockedTriggerLocations.contains(event.getBlock().getLocation()) && current > 0) {
@@ -98,33 +100,35 @@ public class ElevatorListener implements Listener {
         // check nearby blocks
         do {
             // y+1
-            sign = getSign(event.getBlock().getRelative(0, 1, 0));
+            sign = SignUtils.getSignByBlock(event.getBlock().getRelative(0, 1, 0));
             if(sign != null) break;
             // y-1
-            sign = getSign(event.getBlock().getRelative(0, -1, 0));
+            sign = SignUtils.getSignByBlock(event.getBlock().getRelative(0, -1, 0));
             if(sign != null) break;
             // x+1
-            sign = getSign(event.getBlock().getRelative(1, 0, 0));
+            sign = SignUtils.getSignByBlock(event.getBlock().getRelative(1, 0, 0));
             if(sign != null) break;
             // x-1
-            sign = getSign(event.getBlock().getRelative(-1, 0, 0));
+            sign = SignUtils.getSignByBlock(event.getBlock().getRelative(-1, 0, 0));
             if(sign != null) break;
             // z+1
-            sign = getSign(event.getBlock().getRelative(0, 0, 1));
+            sign = SignUtils.getSignByBlock(event.getBlock().getRelative(0, 0, 1));
             if(sign != null) break;
             // z-1
-            sign = getSign(event.getBlock().getRelative(0, 0, -1));
+            sign = SignUtils.getSignByBlock(event.getBlock().getRelative(0, 0, -1));
             break;
         } while(false);
 
-        if(sign == null) return;
+        if(sign == null) {
+            return;
+        }
 
-//        RaidCraft.LOGGER.info("[RCElevator] Sign Redstone event at: " +
-//                "x=" + sign.getLocation().getBlockX() + "|" +
-//                "y=" + sign.getLocation().getBlockY() + "|" +
-//                "z=" + sign.getLocation().getBlockZ());
+/*        RCElevator.instance().getLogger().info("[RCElevator] Sign Redstone event at: " +
+                "x=" + sign.getLocation().getBlockX() + "|" +
+                "y=" + sign.getLocation().getBlockY() + "|" +
+                "z=" + sign.getLocation().getBlockZ());*/
 
-        if(!SignUtils.isLineEqual(sign.getLine(1), RCElevator.SIGN_TAG)) {
+        if(!ElevatorSign.isElevatorSign(sign)) {
             return;
         }
 
@@ -145,15 +149,5 @@ public class ElevatorListener implements Listener {
                     "y=" + sign.getLocation().getBlockY() + "|" +
                     "z=" + sign.getLocation().getBlockZ());
         }
-    }
-
-    private Sign getSign(Block block)
-    {
-        if(!SignUtils.isWallSign(block.getType())
-                && !SignUtils.isPostSign(block.getType())) {
-            return null;
-        }
-
-        return (Sign)block.getState();
     }
 }

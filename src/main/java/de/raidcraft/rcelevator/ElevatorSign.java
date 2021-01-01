@@ -4,6 +4,7 @@ import de.raidcraft.rcelevator.exceptions.NoTargetException;
 import de.raidcraft.rcelevator.exceptions.UnknownFloorException;
 import de.raidcraft.rcelevator.exceptions.WrongSignFormatException;
 import de.raidcraft.rcelevator.utils.SignUtils;
+import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +13,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Directional;
+import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class ElevatorSign {
     private static final int DEFAULT_RADIUS = 2;
     private static final int MAX_RADIUS = 5;
     
-     
+    @Getter
     private Sign sign;
     private int thisFloor;
     private int lowestFloor;
@@ -166,7 +168,9 @@ public class ElevatorSign {
             }
             ElevatorSign elevatorSign = new ElevatorSign((Sign)block.getState());
             if(elevatorSign.isValid() && elevatorSign.getThisFloor() == targetFloor) {
-                BlockFace facing = ((Directional) block.getType().getNewData(block.getData())).getFacing();
+
+                MaterialData materialData = block.getState().getData();
+                BlockFace facing = SignUtils.getFacing(materialData);
 
                 Block targetBlock = null;
                 if(facing == BlockFace.NORTH) {
@@ -224,7 +228,10 @@ public class ElevatorSign {
         for(Player player : sign.getLocation().getWorld().getPlayers()) {
             if(Math.abs(Math.abs(player.getLocation().getY()) - Math.abs(sign.getLocation().getY())) > 2) continue;
             if(SignUtils.isWallSign(sign.getType())) {
-                BlockFace facing = ((Directional) sign.getBlock().getType().getNewData(sign.getBlock().getData())).getFacing();
+
+                MaterialData materialData = sign.getBlock().getState().getData();
+                BlockFace facing = SignUtils.getFacing(materialData);
+
                 if(facing == BlockFace.NORTH) {
                     if(player.getLocation().getX()-1 > sign.getLocation().getX()) continue;
                 }
@@ -296,5 +303,15 @@ public class ElevatorSign {
 
     public String getInvalidMsg() {
         return invalidMsg;
+    }
+
+    public static boolean isElevatorSign(Sign sign) {
+
+        return SignUtils.isLineEqual(sign.getLine(1), RCElevator.SIGN_TAG);
+    }
+
+    public static boolean isElevatorSignTag(String string) {
+
+        return SignUtils.isLineEqual(string, RCElevator.SIGN_TAG);
     }
 }
