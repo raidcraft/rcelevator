@@ -1,4 +1,4 @@
-package de.raidcraft.template;
+package de.raidcraft.rcelevator;
 
 import de.exlll.configlib.annotation.ConfigurationElement;
 import de.exlll.configlib.configs.yaml.BukkitYamlConfiguration;

@@ -1,8 +1,6 @@
-package de.raidcraft.template;
+package de.raidcraft.rcelevator;
 
 import co.aikar.commands.PaperCommandManager;
-import de.raidcraft.template.commands.AdminCommands;
-import de.raidcraft.template.commands.PlayerCommands;
 import io.ebean.Database;
 import kr.entree.spigradle.annotations.PluginMain;
 import lombok.AccessLevel;
@@ -18,11 +16,11 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import java.io.File;
 
 @PluginMain
-public class PluginTemplate extends JavaPlugin {
+public class RCElevator extends JavaPlugin {
 
     @Getter
     @Accessors(fluent = true)
-    private static PluginTemplate instance;
+    private static RCElevator instance;
 
     private Database database;
     @Getter
@@ -34,11 +32,11 @@ public class PluginTemplate extends JavaPlugin {
     @Getter
     private static boolean testing = false;
 
-    public PluginTemplate() {
+    public RCElevator() {
         instance = this;
     }
 
-    public PluginTemplate(
+    public RCElevator(
             JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
         instance = this;
@@ -52,7 +50,6 @@ public class PluginTemplate extends JavaPlugin {
         setupDatabase();
         if (!testing) {
             setupListener();
-            setupCommands();
         }
     }
 
@@ -71,14 +68,6 @@ public class PluginTemplate extends JavaPlugin {
     private void setupListener() {
 
 
-    }
-
-    private void setupCommands() {
-
-        this.commandManager = new PaperCommandManager(this);
-
-        commandManager.registerCommand(new AdminCommands(this));
-        commandManager.registerCommand(new PlayerCommands(this));
     }
 
     private void setupDatabase() {
