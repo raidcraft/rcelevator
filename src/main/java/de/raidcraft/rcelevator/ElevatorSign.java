@@ -3,17 +3,17 @@ package de.raidcraft.rcelevator;
 import de.raidcraft.rcelevator.exceptions.NoTargetException;
 import de.raidcraft.rcelevator.exceptions.UnknownFloorException;
 import de.raidcraft.rcelevator.exceptions.WrongSignFormatException;
+import de.raidcraft.rcelevator.utils.BlockDataUtils;
 import de.raidcraft.rcelevator.utils.SignUtils;
 import lombok.Getter;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Directional;
-import org.bukkit.material.MaterialData;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,36 +160,29 @@ public class ElevatorSign {
     
     private Location getTarget() throws NoTargetException {
         Location signLocation = sign.getLocation();
+
+        // Walk through each layer of blocks to find targeted Elevator sign
         for(int i = signLocation.getBlockY(); checkSearchCount(i); i = incDecSearchCount(i)) {
-            
-            Block block = signLocation.getWorld().getBlockAt(signLocation.getBlockX(), i, signLocation.getBlockZ());
-            if(block == null || !(block.getState() instanceof Sign)) {
+            World world = signLocation.getWorld();
+            if(world == null) continue;
+            Block block = world.getBlockAt(signLocation.getBlockX(), i, signLocation.getBlockZ());
+            if(!(block.getState() instanceof Sign)) {
                 continue;
             }
+
             ElevatorSign elevatorSign = new ElevatorSign((Sign)block.getState());
+
+            // We found the correct Elevator sign
             if(elevatorSign.isValid() && elevatorSign.getThisFloor() == targetFloor) {
 
-                MaterialData materialData = block.getState().getData();
-                BlockFace facing = SignUtils.getFacing(materialData);
-
-                Block targetBlock = null;
-                if(facing == BlockFace.NORTH) {
-                    targetBlock = block.getRelative(-1, 0, 0);
-                }
-                if(facing == BlockFace.EAST) {
-                    targetBlock = block.getRelative(0, 0, -1);
-                }
-                if(facing == BlockFace.SOUTH) {
-                    targetBlock = block.getRelative(1, 0, 0);
-                }
-                if(facing == BlockFace.WEST) {
-                    targetBlock = block.getRelative(0, 0, 1);
-                }
+                BlockFace elevatorSignFacing = BlockDataUtils.getFacing(block.getState().getBlockData());
+                Block targetBlock = block.getRelative(elevatorSignFacing);
                 
-                if(targetBlock == null) {
+                if(targetBlock.getType() != Material.AIR) {
                     throw new NoTargetException("Das gewählte Stockwerk bietet nicht genug Platz!");
                 }
 
+                // Search floor block
                 for(i = 0; i < 5; i++) {
                     Block below = targetBlock.getRelative(0, -1, 0);
                     if(below.getType() == Material.AIR) {
@@ -216,7 +209,9 @@ public class ElevatorSign {
 
     private boolean checkSearchCount(int i) {
         if(targetFloor > thisFloor) {
-            return (i < sign.getLocation().getWorld().getMaxHeight());
+            World world = sign.getLocation().getWorld();
+            if(world == null) return false;
+            return (i < world.getMaxHeight());
         }
         else {
             return (i > 0);
@@ -225,24 +220,26 @@ public class ElevatorSign {
 
     private List<Player> getPassenger() {
         List<Player> passenger = new ArrayList<>();
-        for(Player player : sign.getLocation().getWorld().getPlayers()) {
+        World world = sign.getLocation().getWorld();
+        if(world == null) return passenger;
+        for(Player player : world.getPlayers()) {
             if(Math.abs(Math.abs(player.getLocation().getY()) - Math.abs(sign.getLocation().getY())) > 2) continue;
             if(SignUtils.isWallSign(sign.getType())) {
 
-                MaterialData materialData = sign.getBlock().getState().getData();
-                BlockFace facing = SignUtils.getFacing(materialData);
+                BlockFace facing = BlockDataUtils.getFacing(sign.getBlock().getState().getBlockData());
 
+                // Check if player is behind sign
                 if(facing == BlockFace.NORTH) {
-                    if(player.getLocation().getX()-1 > sign.getLocation().getX()) continue;
+                    if(player.getLocation().getZ() > sign.getLocation().getZ()) continue;
                 }
                 if(facing == BlockFace.EAST) {
-                    if(player.getLocation().getZ()-1 > sign.getLocation().getZ()) continue;
+                    if(player.getLocation().getX() < sign.getLocation().getX()) continue;
                 }
                 if(facing == BlockFace.SOUTH) {
-                    if(player.getLocation().getX()+1 < sign.getLocation().getX()) continue;
+                    if(player.getLocation().getZ() < sign.getLocation().getZ()) continue;
                 }
                 if(facing == BlockFace.WEST) {
-                    if(player.getLocation().getZ()+1 < sign.getLocation().getZ()) continue;
+                    if(player.getLocation().getX() > sign.getLocation().getX()) continue;
                 }
 
 

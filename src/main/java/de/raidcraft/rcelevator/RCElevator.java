@@ -1,15 +1,9 @@
 package de.raidcraft.rcelevator;
 
-import co.aikar.commands.PaperCommandManager;
 import de.raidcraft.rcelevator.listener.ElevatorListener;
-import io.ebean.Database;
 import kr.entree.spigradle.annotations.PluginMain;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.silthus.ebean.Config;
-import net.silthus.ebean.EbeanWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginDescriptionFile;
