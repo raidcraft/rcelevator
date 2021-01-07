@@ -27,7 +27,7 @@ Diese Zeile markiert das Schild als Aufzug-Schild.
 In dieser Zeile wird festgelegt zwischen welchen Stockwerken der Aufzug fährt. Beginnend mit dem niedrigsten und anschließend den obersten Stockwerk.
 Optional kann zwischen den Angaben noch die Aufzug-Kabinen-Größe eingestellt werden. Diese wird als Volumen in Blöcken angegeben. D.h. eine Angabe von 2 bedeutet alle Spieler im Radius von 2x2x2 blöcken werden beim aktivieren des Aufzugs in das gewählte Stockerk teleportiert.
 
-*Zeile 3:* ``<Ziel-Stockwerk>``
+*Zeile 4:* ``<Ziel-Stockwerk>``
 
 Hier wird das initiale Ziel-Stockwerk angegeben.
 Möglich sind Angaben von Untergeschossen (beginnend mit ``UG``), das Erdgeschoss (``EG``) oder Obergeschosse (beginnend mit ``OG``).
@@ -42,6 +42,7 @@ Dieser Aufzug reicht von Erdgeschoss bis zum 25. Obergeschoss (3. Zeile).
 EG
 [Aufzug]
 EG - OG25
+OG1
 ```
 
 #### Beispiel 2 (Optionale Kabinen-Größe) 
@@ -53,6 +54,7 @@ Dieser Aufzug reicht von Untergeschoss 2 bis Obergeschoss 3 und verwendet eine K
 O1
 [Aufzug]
 UG2 - 2 - OG3
+EG
 ```
 
 ## Permissions
