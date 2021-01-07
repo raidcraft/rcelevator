@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/raidcraft/rcelevator/compare/v1.0.2...v1.0.3) (2021-01-07)
+
+
+### Bug Fixes
+
+* Prevent destruction of elevator signs. Fixes [#9](https://github.com/raidcraft/rcelevator/issues/9) ([fcdc363](https://github.com/raidcraft/rcelevator/commit/fcdc363a62bb1409099471f09fe42caac376392d))
+
 ## [1.0.2](https://github.com/raidcraft/rcelevator/compare/v1.0.1...v1.0.2) (2021-01-04)
 
 
