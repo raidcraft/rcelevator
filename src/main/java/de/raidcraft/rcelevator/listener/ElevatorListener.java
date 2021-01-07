@@ -9,6 +9,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -149,5 +150,22 @@ public class ElevatorListener implements Listener {
                     "y=" + sign.getLocation().getBlockY() + "|" +
                     "z=" + sign.getLocation().getBlockZ());
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+
+        Sign sign = SignUtils.getSignByBlock(event.getBlock());
+        if(sign == null) {
+            return;
+        }
+
+        if(!ElevatorSign.isElevatorSign(sign)) {
+            return;
+        }
+
+        event.getPlayer().sendMessage(ChatColor.RED + "Aufzug-Schilder können nicht direkt zerstört werden!");
+
+        event.setCancelled(true);
     }
 }
