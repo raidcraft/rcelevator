@@ -84,7 +84,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:3.+"
     testImplementation 'org.assertj:assertj-core:3.+'
     testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:0.16.0'
-    testImplementation 'org.jetbrains:annotations:16.0.2'
+    testImplementation 'org.jetbrains:annotations:20.1.0'
 }
 
 shadowJar {
