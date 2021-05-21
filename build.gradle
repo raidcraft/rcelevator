@@ -9,8 +9,8 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'idea'
-    id 'io.freefair.lombok' version '5.3.0'
-    id 'io.ebean' version '12.8.2'
+    id 'io.freefair.lombok' version '5.3.3.3'
+    id 'io.ebean' version '12.9.0'
     id 'kr.entree.spigradle' version '2.2.3'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
@@ -78,7 +78,7 @@ dependencies {
     testImplementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.2'
     testImplementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
     testImplementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
-    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.19'
+    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.20'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.+'
     testImplementation "org.mockito:mockito-core:3.+"
